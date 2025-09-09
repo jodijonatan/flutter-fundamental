@@ -1,12 +1,32 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(new MaterialApp(home: new HalamanHallo()));
+  runApp(MyApp());
 }
 
-class HalamanHallo extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(body: new Center(child: new Text("Hello, World!")));
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'SMK Telkom 1 Medan',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.blue,
+        ),
+        backgroundColor: Colors.white, // Pindahkan properti di sini
+        body: Center(
+          child: Text(
+            "Selamat datang Jodi Jonatan Karo Karo",
+            style: TextStyle(color: Colors.black, fontSize: 18.0),
+          ),
+        ),
+      ),
+    );
   }
 }
