@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,159 +10,57 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const Formpage(),
-    );
-  }
-}
-
-class Formpage extends StatefulWidget {
-  const Formpage({super.key});
-
-  @override
-  State<Formpage> createState() => _FormpageState();
-}
-
-class _FormpageState extends State<Formpage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _ageController.dispose();
-    _emailController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Form Input Flutter")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [Icon(Icons.person, size: 25, color: Colors.grey)],
-            ),
-
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                label: Text("Masukkan Nama"),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [Icon(Icons.visibility, size: 25, color: Colors.grey)],
-            ),
-
-            TextField(
-              controller: _ageController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                label: Text("Masukkan Umur"),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [Icon(Icons.email, size: 25, color: Colors.grey)],
-            ),
-
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                label: Text("Masukan Email Anda"),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            ElevatedButton(
-              onPressed: () {
-                final name = _nameController.text.trim();
-                final ageText = _ageController.text.trim();
-                final email = _emailController.text.trim();
-
-                if (name.isEmpty || ageText.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Nama, umur dan email harus diisi!"),
-                    ),
-                  );
-                  return;
-                }
-
-                final ageInt = int.tryParse(ageText);
-                if (ageInt == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Umur harus berupa angka yang valid."),
-                    ),
-                  );
-                  return;
-                }
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        SecondPage(name: name, age: ageInt, email: email),
-                  ),
-                );
-              },
-              child: const Text("Submit"),
-            ),
-          ],
-        ),
+      title: 'ListView.builder + ListTile',
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Contoh ListView.builder')),
+        body: const DaftarOrang(),
       ),
     );
   }
 }
 
-class SecondPage extends StatelessWidget {
-  final String name;
-  final int age;
-  final String email;
+class DaftarOrang extends StatelessWidget {
+  const DaftarOrang({super.key});
 
-  const SecondPage({
-    super.key,
-    required this.name,
-    required this.age,
-    required this.email,
-  });
+  final List<Map<String, String>> data = const [
+    {'nama': 'maleakhi', 'email': 'maleakhi@mail.com'},
+    {'nama': 'jodi', 'email': 'jodi@mail.com'},
+    {'nama': 'lutfi', 'email': 'lutfi@mail.com'},
+    {'nama': 'harry', 'email': 'harry@mail.com'},
+    {'nama': 'brema', 'email': 'brema@mail.com'},
+    {'nama': 'vorgiano', 'email': 'vorgiano@mail.com'},
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Halaman Kedua")),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Halo, nama anda $name dan umur anda $age serta email anda $email",
-              style: const TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        final orang = data[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.blueAccent,
+              child: Text(
+                orang['nama']![0],
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              child: const Text("Kembali ke halaman pertama"),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        ),
-      ),
+            title: Text(orang['nama']!),
+            subtitle: Text(orang['email']!),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Kamu menekan ${orang['nama']}'),
+                  duration: const Duration(seconds: 1),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
